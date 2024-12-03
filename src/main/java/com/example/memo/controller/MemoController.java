@@ -126,6 +126,31 @@ public class MemoController {
         return new ResponseEntity<>(new MemoResponseDto(memo), HttpStatus.OK);
     }
 
+    @PatchMapping("/{id}")  // 일부 수정해야 하기 때문에 @PatchMapping이 필요하다.
+    public ResponseEntity<MemoResponseDto> updateTitle(
+            @PathVariable Long id,
+            @RequestBody MemoRequestDto dto
+    ) {
+        Memo memo = memoList.get(id);
+
+        // NullPointerException 방지
+        if (memo == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        // 필수 값을 검증해준다. 제목은 필수지만 내용은 필수가 아니다.
+        if (dto.getTitle() == null || dto.getContents() != null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);  // 필수 값을 클라이언트가 전달해주는 것이기 때문에 BAD_REQUEST를 반환해준다.
+        }
+
+        // 제목만 수정한다.
+        memo.updateTitle(dto);
+
+        // 바뀐 Memo를 확인하기 위해서 MemoResponseDto 형태로 반환한다. 업데이트된 Memo를 전달한다.
+        return new ResponseEntity<>(new MemoResponseDto(memo), HttpStatus.OK);
+
+    }
+
     @DeleteMapping("/{id}")  // 식별자로 id가 필요하다.
     public void deleteMemo(@PathVariable Long id) {
 
