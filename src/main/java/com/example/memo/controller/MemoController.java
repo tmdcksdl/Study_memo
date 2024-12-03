@@ -102,7 +102,7 @@ public class MemoController {
     }
 
     @PutMapping("/{id}")  // 전체 수정을 하기 위해서 @PutMapping을 사용한다. 단건을 수정할 것이기 때문에 경로 변수가 필요하다.
-    public MemoResponseDto updateMemoById(
+    public ResponseEntity<MemoResponseDto> updateMemoById(
             @PathVariable Long id,  // @PathVariable로 id 바인딩
             @RequestBody MemoRequestDto dto  // 어떤 데이터로 수정할 지도 요청을 받아야 한다. 제목, 내용을 모두 수정할 수 있다.
     ) {
@@ -112,8 +112,18 @@ public class MemoController {
         // Memo 수정 메서드 사용
         memo.update(dto);
 
+        // ResponseEntity를 사용하면 다음과 같이 동적으로 응답해줄 수 있다.
+        if (memo == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        // 필수 값을 검증해준다.
+        if (dto.getTitle() == null || dto.getContents() == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);  // 필수 값을 클라이언트가 전달해주는 것이기 때문에 BAD_REQUEST를 반환해준다.
+        }
+
         // 바뀐 Memo를 확인하기 위해서 MemoResponseDto 형태로 반환한다. 업데이트된 Memo를 전달한다.
-        return new MemoResponseDto(memo);
+        return new ResponseEntity<>(new MemoResponseDto(memo), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")  // 식별자로 id가 필요하다.
