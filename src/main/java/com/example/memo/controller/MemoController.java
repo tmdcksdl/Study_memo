@@ -7,9 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @RestController  // 데이터를 항상 JSON 형태로 통신을 하기로 했기 때문에 @RestController를 사용하면 된다.
 @RequestMapping ("/memos") // prefix URL을 만들 때 사용한다.
@@ -51,6 +49,36 @@ public class MemoController {
         HTTP Status를 확인해보면 1xx, 2xx, 3xx, 4xx, 5xx까지 이미 Enum 값으로 다 만들어져있다.
         사용할 응답에 적절한 상태 코드를 찾아서 사용하면 된다. 만들어진 것을 사용하는 것이 가장 바람직하다.
          */
+    }
+
+    @GetMapping  // 뒤에 아무것도 적지 않고, 괄호도 적지 않으면 상단의 @RequestMapping이 Mapping된다.
+    public ResponseEntity<List<MemoResponseDto>> findAllMemos() {  // 전체 조회이기 때문에 파라미터가 필요없다.
+
+        // init List 초기화
+        List<MemoResponseDto> responseList = new ArrayList<>();  // List는 인터페이스이기 때문에 구현체를 사용해서 초기화해줘야 한다. 인터페이스는 new 해서 인스턴스화 할 수 없다.
+
+
+        /*
+        HashMap<Memo> -> List<MemoResponseDto>
+        데이터베이스가 Map으로 만들어져 있다. -> HashMap에 Memo가 저장된다.
+        전체 조회해서 List<MemoResponseDto> 형태로 만들어준다.
+         */
+        for (Memo memo : memoList.values()) {  // memoList의 모든 Memo를 꺼낸다. 꺼내진 Memo만큼 memo에 들어간다. 하나씩 들어가면서 반복문이 실행된다.
+            MemoResponseDto responseDto = new MemoResponseDto(memo);  // memo가 MemoResponseDto 형태로 바뀐다.
+
+            responseList.add(responseDto);  // responseList에 생성된 MemoResponseDto를 하나씩 추가한다.
+        }
+
+        /*
+        Map To List
+        스트림 사용해서 좀 더 간단하게 구현
+        위에 있는 코드와 결국 결과는 똑같다.
+        stream을 사용하는 것에 익숙해진다면 그때 사용할 것!
+         */
+        //responseList = memoList.values().stream().map(MemoResponseDto::new).toList();
+
+        return new ResponseEntity<>(responseList, HttpStatus.OK);  // 모든 응답값을 ResponseEntity로 통일하는 것이 좋다!
+
     }
 
     /**
