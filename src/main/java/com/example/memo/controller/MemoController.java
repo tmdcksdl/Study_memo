@@ -74,4 +74,11 @@ public class MemoController {
         // 바뀐 Memo를 확인하기 위해서 MemoResponseDto 형태로 반환한다. 업데이트된 Memo를 전달한다.
         return new MemoResponseDto(memo);
     }
+
+    @DeleteMapping("/{id}")  // 식별자로 id가 필요하다.
+    public void deleteMemo(@PathVariable Long id) {
+
+        // memoList에 저장되어 있는 값 삭제 -> id와 같은 데이터 삭제
+        memoList.remove(id);
+    }
 }
