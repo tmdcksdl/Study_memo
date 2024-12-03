@@ -87,13 +87,18 @@ public class MemoController {
      * @return MemoResponseDto(memo) - 저장된 데이터를 MemoResponseDto 형태로 바꿔서 응답해준다.
      */
     @GetMapping("/{id}")  // 조회이기 때문에 @GetMapping 사용한다.
-    public MemoResponseDto findMemoById(@PathVariable Long id) {  // 식별자를 파라미터로 바인딩할 때는 @PathVariable을 사용한다.
+    public ResponseEntity<MemoResponseDto> findMemoById(@PathVariable Long id) {  // 식별자를 파라미터로 바인딩할 때는 @PathVariable을 사용한다.
 
         // memoList라는 데이터베이스에서 get()을 통해서 key값을 전달해주면 저장되어 있는 memo를 조회할 수 있다.
         Memo memo = memoList.get(id);
 
+        // ResponseEntity를 사용하면 다음과 같이 동적으로 응답해줄 수 있다.
+        if (memo == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
         // 저장된 데이터를 MemoResponseDto 형태로 바꿔서 응답해준다.
-        return new MemoResponseDto(memo);
+        return new ResponseEntity<>(new MemoResponseDto(memo), HttpStatus.OK);
     }
 
     @PutMapping("/{id}")  // 전체 수정을 하기 위해서 @PutMapping을 사용한다. 단건을 수정할 것이기 때문에 경로 변수가 필요하다.
