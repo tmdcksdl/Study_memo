@@ -119,6 +119,9 @@ public class MemoController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);  // 필수 값을 클라이언트가 전달해주는 것이기 때문에 BAD_REQUEST를 반환해준다.
         }
 
+        // memo 수정
+        memo.update(dto);
+
         // 바뀐 Memo를 확인하기 위해서 MemoResponseDto 형태로 반환한다. 업데이트된 Memo를 전달한다.
         return new ResponseEntity<>(new MemoResponseDto(memo), HttpStatus.OK);
     }
