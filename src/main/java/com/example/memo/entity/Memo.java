@@ -33,4 +33,9 @@ public class Memo {
         this.contents = dto.getContents();
     }
 
+    // updateTitle 메서드
+    public void updateTitle(MemoRequestDto dto) {
+        this.title = dto.getTitle();  // 제목만 수정하면 된다.
+    }
+
 }
