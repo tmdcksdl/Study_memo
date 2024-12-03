@@ -24,7 +24,7 @@ public class MemoController {
     /*
     실제 호출해서 사용할 Controller를 만들어줘야 한다.
     반환 타입은 설정하기 나름이다. 생성할 때 데이터를 주지 않아도 되고 줘도 되는데, 그때 ResponseDto 형태로 전달하면 된다.
-    그리고 우리는 MemoResponseDto를 전달할 것이다. 라는 의미이다.
+    그리고 "우리는 MemoResponseDto를 전달할 것이다."라는 의미이다.
      */
     @PostMapping  // 생성이기 떄문에 사용한다.
     public MemoResponseDto createMemo(@RequestBody MemoRequestDto dto) {  // 파라미터로 바로 바인딩 하는 방법 : @RequestBody
