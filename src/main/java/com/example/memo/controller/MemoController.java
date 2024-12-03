@@ -109,9 +109,6 @@ public class MemoController {
         // 실제로 동작할 로직
         Memo memo = memoList.get(id);
 
-        // Memo 수정 메서드 사용
-        memo.update(dto);
-
         // ResponseEntity를 사용하면 다음과 같이 동적으로 응답해줄 수 있다.
         if (memo == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
