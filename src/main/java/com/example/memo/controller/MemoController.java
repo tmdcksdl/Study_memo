@@ -152,9 +152,16 @@ public class MemoController {
     }
 
     @DeleteMapping("/{id}")  // 식별자로 id가 필요하다.
-    public void deleteMemo(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteMemo(@PathVariable Long id) {  // 대문자 Void가 들어간다.
 
-        // memoList에 저장되어 있는 값 삭제 -> id와 같은 데이터 삭제
-        memoList.remove(id);
+        // memoList의 key값에 id를 포함하고 있다면 삭제한다.
+        if (memoList.containsKey(id)) {
+            memoList.remove(id);  // memoList에 저장되어 있는 값 삭제 -> id와 같은 데이터 삭제
+
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+
+        // id 값의 데이터가 없을 경우 NOT_FOUND를 반환한다.
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }
