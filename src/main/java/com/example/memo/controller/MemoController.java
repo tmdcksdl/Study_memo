@@ -3,10 +3,7 @@ package com.example.memo.controller;
 import com.example.memo.dto.MemoRequestDto;
 import com.example.memo.dto.MemoResponseDto;
 import com.example.memo.entity.Memo;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -46,6 +43,21 @@ public class MemoController {
         응답하는 데이터 : MemoResponseDto 형태
         요청하는 데이터 : MemoRequestDto 형태
          */
+        return new MemoResponseDto(memo);
+    }
+
+    /**
+     * 메모를 조회하는 메서드
+     * @param id - 식별자
+     * @return MemoResponseDto(memo) - 저장된 데이터를 MemoResponseDto 형태로 바꿔서 응답해준다.
+     */
+    @GetMapping("/{id}")  // 조회이기 때문에 @GetMapping 사용한다.
+    public MemoResponseDto findMemoById(@PathVariable Long id) {  // 식별자를 파라미터로 바인딩할 때는 @PathVariable을 사용한다.
+
+        // memoList라는 데이터베이스에서 get()을 통해서 key값을 전달해주면 저장되어 있는 memo를 조회할 수 있다.
+        Memo memo = memoList.get(id);
+
+        // 저장된 데이터를 MemoResponseDto 형태로 바꿔서 응답해준다.
         return new MemoResponseDto(memo);
     }
 }
