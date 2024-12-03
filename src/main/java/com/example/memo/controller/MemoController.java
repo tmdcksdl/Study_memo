@@ -3,6 +3,8 @@ package com.example.memo.controller;
 import com.example.memo.dto.MemoRequestDto;
 import com.example.memo.dto.MemoResponseDto;
 import com.example.memo.entity.Memo;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
@@ -24,7 +26,7 @@ public class MemoController {
     그리고 "우리는 MemoResponseDto를 전달할 것이다."라는 의미이다.
      */
     @PostMapping  // 생성이기 떄문에 사용한다.
-    public MemoResponseDto createMemo(@RequestBody MemoRequestDto dto) {  // 파라미터로 바로 바인딩 하는 방법 : @RequestBody
+    public ResponseEntity<MemoResponseDto> createMemo(@RequestBody MemoRequestDto dto) {  // 파라미터로 바로 바인딩 하는 방법 : @RequestBody, 메모를 생성하는 API에서 상태 코드를 따로 반환할 수 있게 만들어주기 위해 ResponseEntity를 사용한다.
 
         // 식별자가 1씩 증가하도록 만들어야 한다.
         Long memoId = memoList.isEmpty() ? 1 : Collections.max(memoList.keySet()) + 1;  // MemoList.keySet() 중에서 최대값을 반환해주는 것이다. 최대값에서 1씩 증가하도록 설정한다.
@@ -43,7 +45,12 @@ public class MemoController {
         응답하는 데이터 : MemoResponseDto 형태
         요청하는 데이터 : MemoRequestDto 형태
          */
-        return new MemoResponseDto(memo);
+        return new ResponseEntity<>(new MemoResponseDto(memo), HttpStatus.CREATED);
+        /*
+        MemoResponseDto만 넣어주는 것이 아니라 실제로 응답할 HTTP Status 코드도 함께 넣어준다.
+        HTTP Status를 확인해보면 1xx, 2xx, 3xx, 4xx, 5xx까지 이미 Enum 값으로 다 만들어져있다.
+        사용할 응답에 적절한 상태 코드를 찾아서 사용하면 된다. 만들어진 것을 사용하는 것이 가장 바람직하다.
+         */
     }
 
     /**
@@ -68,6 +75,7 @@ public class MemoController {
     ) {
         // 실제로 동작할 로직
         Memo memo = memoList.get(id);
+
         // Memo 수정 메서드 사용
         memo.update(dto);
 
